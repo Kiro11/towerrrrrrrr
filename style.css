@@ -109,13 +109,14 @@ cursor: pointer;
 }
 
 .hud{
-position: absolute;
-top: 16px;
-left: 0;
-right: 0;
-display: flex;
-justify-content: center;
-pointer-events: none;
+  position: absolute;
+  top: 16px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
 .hud[hidden]{ display: none; }
 .hud-score{
   font-family: 'IBM Plex Mono', monospace;
@@ -135,7 +136,7 @@ inset: 0;
 display: flex;
 align-items: center;
 justify-self: center;
-background: rgba(red, green, blue, alpha);
+background: rgba(74, 46, 18, 0.28);
 backdrop-filter: blur(2px);
 padding: 20px;
 }
@@ -190,11 +191,37 @@ letter-spacing: 0.02em;
  box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.3) inset,
     0 8px 18px rgba(140, 86, 19, 0.32);
-  transition: transform 0.15s ease, box-shadow 0.15s eas
+  transition: transform 0.15s ease, box-shadow 0.15s ease
      }
 .btn:hover{
 transform: translateY(-1px);
 box-shadow: 0 1px 0 rgba(255, 255, 255, 0.3) inset,
     0 11px 22px rgba(140, 86, 19, 0.38);
 }
+.btn:active{
+transform: translateY(1px);
+box-shadow:   0 1px 0 rgba(255, 255, 255, 0.2) inset,
+    0 4px 10px rgba(140, 86, 19, 0.28);
+}
+.hint{
+margin-bottom: 18px;
+font-family: 'IBM Plex Mono', monospace;
+font-size: 10.5PX;
+color: var(--ink-soft);
+letter-spacing: 0.02em;
+}
+.best-pill{
+margin-top: 18px;
+font-family:'IBM Plex Mono', monospace ;
+font-size: 11px;
+color: var(--ink-soft);
+letter-spacing: 0.03em;
+}
+button:focus-visible{
+outline: 2px solid var(--berry);
+outline-offset: 3px;
+}
+    @media (min-height:820px){
+body{ padding-top: 80px;}
+    }
 

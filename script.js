@@ -1,4 +1,4 @@
-function () {
+(function () {
   'use strict';
  
   var frame = document.getElementById('frame');
@@ -141,4 +141,199 @@ function () {
       life: 1
     });
   }
+
+  function spawnCrumbs(x,worldY, count) {
+for (var i = 0; i < count; i++) {
+var angle = Math.random() * Math.PI * 2;
+      var speed = 30 + Math.random() * 70;
+      crumbs.push({
+        x: x, y: worldY,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed - 30,
+        r: 1.5 + Math.random() * 2,
+        alpha: 1,
+        life: 1
+      });
+    }
+  }
+
+  function spawnPopup(x, worldY, text, color) {
+popups.push({ x: x, y: worldY, text: text, color: color, alpha: 1, vy:-34, life: 1 });
+  }
+
+  function spawnSteamIfNeeded() {
+    if (steams.length < 5 && Math.random() < 0.02) {
+      steams.push({
+        x: W * 0.3 + Math.random() * W * 0.4,
+        y: PLATE_Y - 20,
+        r: 10 + Math.random() * 14,
+        alpha: 0,
+        phase: Math.random() * Math.PI * 2,
+        speed: 14 + Math.random() * 10,
+        life: 1
+      });
+    }
+  }
+   
+    function worldRowY(rowIndex) {
+        return PLATE_Y - (rowIndex + 1) * LAYER_H;
+  }
+    function handlePrimaryAction() {
+ if (state === 'start') {
+  startGame();
+ } else if (state === 'playing') {
+    handleDrop();
+ } else if (state === 'gameover') {
+     startGame();
+ }
+}
+    function startGame() {
+    state = 'playing';
+    startOverlay.hidden = true;
+    overOverlay.hidden = true;
+    hud.hidden = false;
+    reset();
+    }
+ function handleDrop() {
+    if (state !== 'playing' || !current) return;
  
+    var top = stack[stack.length - 1];
+    var curLeft = current.x - current.width / 2;
+    var curRight = current.x + current.width / 2;
+    var topLeft = top.x - top.width / 2;
+    var topRight = top.x + top.width / 2;
+    var overlapLeft = Math.max(curLeft, topLeft);
+    var overlapRight = Math.min(curRight, topRight);
+    var overlapWidth = overlapRight - overlapLeft;
+    var rowY = worldRowY(current.rowIndex);
+ 
+    if (overlapWidth <= 3) {
+      triggerGameOver();
+     return;
+  }
+
+
+ var isPerfect = overlapWidth >= current.width * 0.94 && overlapWidth >= top.width * 0.94;
+
+if (curLeft < overlapLeft - 0.5) {
+  spawnChunk(curLeft, rowY, overlapLeft - curLeft, LAYER_H, -1, current.colorIndex);
+}
+if (curRight > overlapRight + 0.5) {
+  spawnChunk(overlapRight, rowY, curRight - overlapRight, LAYER_H, 1, current.colorIndex);
+}
+    var newWidth = isPerfect ? current.width : overlapWidth;
+    var newX = isPerfect ? top.x : (overlapLeft + overlapRight) / 2;
+ 
+    comboStreak = isPerfect ? comboStreak + 1 : 0;
+    spawnCrumbs(newX, rowY, isPerfect ? 10 : 5);
+ 
+    if (isPerfect) {
+      spawnPopup(newX, rowY - 6, comboStreak >= 3 ? 'SWEET STREAK!' : 'PERFECT!', '#d6432f');
+    }
+ var newRowIndex = current.rowIndex;
+    stack.push({
+      x: newX,
+      width: newWidth,
+      colorIndex: newRowIndex % COLORS.length,
+      garnish: pickGarnish(newRowIndex)
+    });
+     updateScoreDisplay();
+    spawnCurrent(newWidth, newRowIndex + 1, stack.length - 1);
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

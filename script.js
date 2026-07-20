@@ -240,93 +240,117 @@ if (curRight > overlapRight + 0.5) {
      updateScoreDisplay();
     spawnCurrent(newWidth, newRowIndex + 1, stack.length - 1);
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+function triggerGameOver() {
+    state = 'gameover';
+    shake(10, 380);
+ 
+    if (current) {
+      fallingCurrent = {
+        x: current.x,
+        y: worldRowY(current.rowIndex),
+        w: current.width,
+        h: LAYER_H,
+        vx: current.dir * 70,
+        vy: -30,
+        rot: 0,
+        vr: current.dir * 2.4,
+        colorIndex: current.colorIndex
+      };
+    }
+    current = null;
+ var finalScore = stack.length - 1;
+    var isNewBest = finalScore > best;
+    if (isNewBest) {
+  best = finalScore;
+  try { localStorage.setItem('flapjack-best', String(best)); } catch (e) {}
+}
+finalScoreEl.textContent = String(finalScore);
+bestScoreEl.textContent = String(best);
+overTitle.textContent = isNewBest ? 'New best tower!' : 'Tower toppled!';
+overNote.textContent = isNewBest
+  ? 'That is your tallest stack yet. Butter someone up about it.'
+  : 'Even the best short-order cooks miss one sometimes.';
+
+hud.hidden = true;
+overOverlay.hidden = false;
+  }
+ 
+  function update(dt) {
+    spawnSteamIfNeeded();
+ 
+    for (var s = steams.length - 1; s >= 0; s--) {
+      var st = steams[s];
+      st.y -= st.speed * dt / 1000;
+      st.phase += dt / 600;
+      st.alpha = Math.min(0.16, st.alpha + dt / 800);
+      if (st.y < TARGET_TOP_Y - 60) { st.life = 0; st.alpha -= dt / 300; }
+      if (st.alpha <= 0 && st.life === 0) steams.splice(s, 1);
+    }
+ 
+    if (state === 'playing' && current) {
+      var halfW = current.width / 2;
+      var leftBound = PLAY_MARGIN + halfW;
+      var rightBound = W - PLAY_MARGIN - halfW;
+      current.x += current.dir * current.speed * dt / 1000;
+      if (current.x < leftBound) { current.x = leftBound; current.dir = 1; }
+      if (current.x > rightBound) { current.x = rightBound; current.dir = -1; }
+  var topRow = current.rowIndex;
+   cameraTarget = Math.max(0, (topRow + 1) * LAYER_H - VISIBLE_RISE);
+    }
+  var camFactor = 1 - Math.pow(0.0025, dt / 1000);
+    camera += (cameraTarget - camera) * camFactor;
+    
+     for (var c = chunks.length - 1; c >= 0; c--) {
+      var ch = chunks[c];
+      ch.vy += GRAVITY * dt / 1000;
+      ch.x += ch.vx * dt / 1000;
+      ch.y += ch.vy * dt / 1000;
+      ch.rot += ch.vr * dt / 1000;
+      ch.life -= dt / 900;
+      if (ch.life <= 0 || (ch.y - camera) > H + 60) chunks.splice(c, 1);
+    }
+    for (var r = crumbs.length - 1; r >= 0; r--) {
+       var cr = crumbs[r];
+       cr.vy += GRAVITY * 0.6 * dt / 1000;
+  cr.x += cr.vx * dt / 1000;
+      cr.y += cr.vy * dt / 1000;
+      cr.life -= dt / 500;
+      cr.alpha = Math.max(0, cr.life);
+      if (cr.life <= 0) crumbs.splice(r, 1);
+    }
+
+
+for (var p = popups.length - 1; p >= 0; p--) {
+  var po = popups[p];
+  po.y += po.vy * dt / 1000;
+po.life -= dt / 750;
+po.alpha = Math.max(0, po.life);
+if (po.life <= 0) popups.splice(p, 1);
+}
+
+
+ if (fallingCurrent) {
+   fallingCurrent.vy += GRAVITY * dt / 1000;
+      fallingCurrent.x += fallingCurrent.vx * dt / 1000;
+      fallingCurrent.y += fallingCurrent.vy * dt / 1000;
+      fallingCurrent.rot += fallingCurrent.vr * dt / 1000;
+      if ((fallingCurrent.y - camera) > H + 80) fallingCurrent = null;
+    }
+   if (shakeTimeLeft > 0) {
+     shakeTimeLeft -= dt;
+        if (shakeTimeLeft < 0) shakeTimeLeft = 0;
+   }
+  }
+   
+    function drawBackground() {
+var g = ctx.createLinearGradient(0, 0, 0, H);
+ g.addColorStop(0, '#fff3cf');
+    g.addColorStop(1, '#ffdd8a');
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, W, H);
+  }
+
+  
 
 
 

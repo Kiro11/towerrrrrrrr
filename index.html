@@ -17,7 +17,7 @@ initial-scale=1.0, maximum-scale=1.0">
 <div class="scene">
  <p class="kicker">Breakfast Arcade</p>
 <h1 class="headline">Flapjack Tower</h1>
-<p class="headline">Drop the pancake right on top of the stack. Clean landings keep your width - sloppy ones get trimmed.</p>
+<p class="sub">Drop the pancake right on top of the stack. Clean landings keep your width — sloppy ones get trimmed.</p>
 <div class="frame" id="frame">
   <canvas id="game"></canvas>
 
@@ -32,26 +32,27 @@ initial-scale=1.0, maximum-scale=1.0">
      <p class="best-pill" id="startBest">Best Tower: 0</p>
  </div>
         </div>
-    <div class="overlay" id="overOverlay" hidden>
-        <div class="card">
-       <h2 id="overTitle">Tower toppled!</h2>
+       <div class="overlay" id="overOverlay" hidden>
+      <div class="card">
+        <h2 id="overTitle">Tower toppled!</h2>
         <p id="overNote">Even the best short-order cooks miss one sometimes.</p>
-        <div class="start">
+        <div class="stat-row">
+          <div class="stat">
             <div class="stat-label">Height</div>
-        <div class="stat-value" id="finalScore">0</div>
+            <div class="stat-value" id="finalScore">0</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Best</div>
+            <div class="stat-value is-best" id="bestScore">0</div>
+          </div>
         </div>
-<div class="stat">
-    <div class="stat-label">Best</div>
-     <div class="stat-value is-best" id="bestScore">0</div>
-</div>
-        </div>
-<button class="btn" id="restartBtn" type="button">Stack again</button>
-    </div>
-</div>
-</div>
+        <button class="btn" id="restartBtn" type="button">Stack again</button>
+      </div>
+     </div>
+  </div>
+
   <p class="hint">Space / tap to drop · works on mobile too</p>
 </div>
 <script src="script.js"></script>
-
 </body>
 </html>

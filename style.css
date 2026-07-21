@@ -96,9 +96,9 @@ background: var(--panel);
 border-radius: 28px;
 border: 1px solid var(--panel-edge);
 box-shadow:   0 1px 0 rgba(255, 255, 255, 0.7) inset,
-    0 -14px 26px rgba(0, 255, 247, 0.06) inset,
-    0 30px 60px rgba(84, 73, 59, 0.3),
-    0 6px 14px rgba(210, 111, 12, 0.18);
+    0 -14px 26px rgba(140, 86, 19, 0.06) inset,
+    0 30px 60px rgba(140, 86, 19, 0.30),
+    0 6px 14px rgba(140, 86, 19, 0.18);
   overflow: hidden;
 }
 canvas{
@@ -223,7 +223,7 @@ box-shadow:   0 1px 0 rgba(255, 255, 255, 0.2) inset,
     0 4px 10px rgba(140, 86, 19, 0.28);
 }
 .hint{
-margin-bottom: 18px;
+margin-top: 18px;
 font-family: 'IBM Plex Mono', monospace;
 font-size: 10.5PX;
 color: var(--ink-soft);

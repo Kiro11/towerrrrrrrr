@@ -22,9 +22,9 @@
   var PLATE_Y = 0, TARGET_TOP_Y = 0, VISIBLE_RISE = 0, PLAY_MARGIN = 0;
   var LAYER_H = 30;
  
-  var BASE_SPEED = 110;
+  var BASE_SPEED = 163;
   var SPEED_STEP = 4.2;
-  var SPEED_MAX = 340;
+  var SPEED_MAX = 420;
   var GRAVITY = 900;
  
   var state = 'start';
@@ -452,12 +452,139 @@ ctx.stroke();
 
     if (garnish) drawGarnish(x, y + h* 0.4, w, garnish);
   }
+   function shadeColor(hex, percent) {
+    var num = parseInt(hex.slice(1), 16);
+    var r = (num >> 16) + percent;
+    var g = ((num >> 8) & 0x00ff) + percent;
+    var b = (num & 0x0000ff) + percent;
+    r = Math.max(Math.min(255, r), 0);
+    g = Math.max(Math.min(255, g), 0);
+    b = Math.max(Math.min(255, b), 0);
+    return '#' + (0x1000000 + r * 0x10000 + g * 0x100 + b).toString(16).slice(1);
+  }
+ function drawStack() {
+    for (var i = 0; i < stack.length; i++) {
+      var layer = stack[i];
+      var y = worldRowY(i) + camera;
+      if (y > H + 40 || y < -60) continue;
+      drawPancake(layer.x, y, layer.width, LAYER_H, layer.colorIndex, layer.garnish, i + 1);
+    }
+  }
 
 
+  function drawCurrent() {
+    if (!current) return;
+    var y = worldRowY(current.rowIndex) + camera;
+    drawPancake(current.x, y, current.width, LAYER_H, current.colorIndex, null, current.rowIndex + 1);
+  }
+ 
+ function drawChunks() {
+   for (var i = 0; i < chunks.length; i++) {
+     var c = chunks[i];
+      var y = c.y + camera;
+       ctx.save();
+     ctx.translate(c.x + c.w / 2, y + c.h / 2);
+         ctx.rotate(c.rot);
+          ctx.globalAlpha = Math.max(0, c.life);
+           ctx.fillStyle = COLORS[c.colorIndex % COLORS.length];
+           roundRect(-c.w / 2, -c.h / 2, c.w, c.h, 5);
+           ctx.fill();
+            ctx.restore();
+   }
+   ctx.globalAlpha = 1;
+  } 
+  function drawFallingCurrent() {
+    if (!fallingCurrent) return;
+    var f = fallingCurrent;
+    var y = f.y + camera;
+    ctx.save();
+    ctx.translate(f.x, y + f.h / 2);
+    ctx.rotate(f.rot);
+    ctx.fillStyle = COLORS[f.colorIndex % COLORS.length];
+    roundRect(-f.w / 2, -f.h / 2, f.w, f.h, 7);
+    ctx.fill();
+    ctx.restore();
+  }
 
+   function drawCrumbs() {
+ for (var i = 0; i < crumbs.length; i++) {
+    var cr = crumbs[i];
+            var y =cr.y + camera;
+               ctx.globalAlpha = cr.alpha;
+                 ctx.fillStyle = '#8c5613'
+                 ctx.beginPath();
+                 ctx.arc(cr.x, y, cr.r, 0, Math.PI * 2 );
+                 ctx.fill();
+    }
+   ctx.globalAlpha = 1;
+  }
+  function drawPopups() {
+  ctx.textAlign = 'center';
+  ctx.font = "700 13px 'Fredoka', sans-serif";
+  for (var i = 0; i < popups.length; i++) {
+    var po = popups[i];
+    var y = po.y + camera;
+    ctx.globalAlpha = po.alpha;
+    ctx.fillStyle = po.color || '#4a2e12';
+    ctx.fillText(po.text, po.x, y);
+  }
+  ctx.globalAlpha = 1;
+}
+      function render() {
+    ctx.clearRect(0, 0, W, H);
+    drawBackground();
+    drawSteam();
+ 
+  var sx = 0, sy = 0;
+  if (shakeTimeLeft > 0) {
+     var m = shakeMag * (shakeTimeLeft / shakeDuration);
+      sx = (Math.random() * 2 - 1) * m;
+      sy = (Math.random() * 2 - 1) * m;
+    }
+  ctx.save();
+   ctx.translate(sx, sy);
+     drawPlate();
+      drawStack();
+       drawCurrent();
+          drawFallingCurrent();
+           drawChunks();
+            drawCrumbs();
+             drawPopups();
+               ctx.restore();
+  }
+    var lastTime = 0;
+     function loop(ts) {
+        if (!lastTime) lastTime = ts;
+          var dt = Math.min(40, ts - lastTime);
+           lastTime = ts;
+           update(dt);
+            render();
+              requestAnimationFrame(loop);
+     }
+      canvas.addEventListener('pointerdown', function (e) {
+    e.preventDefault();
+    handlePrimaryAction();
+  });
+ window.addEventListener('keydown', function (e) {
+    if (e.code === 'Space' || e.code === 'ArrowDown') {
+      e.preventDefault();
+      handlePrimaryAction();
+    }
+  });
+ startBtn.addEventListener('click', startGame);
+ restartBtn.addEventListener('click', startGame)
+ window.addEventListener('resize', function () {
+    resize();
+    if (state !== 'playing') {
+      stack = [{ x: W / 2, width: Math.min(190, W * 0.5), colorIndex: 0, garnish: null }];
+    }
+  });
 
-
-
+      resize();
+       stack = [{ x: W / 2, width: Math.min(190, W * 0.5)
+        , colorIndex: 0, garnish: null }];
+        requestAnimationFrame(loop);
+        })();
 
 
 

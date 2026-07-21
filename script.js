@@ -22,7 +22,7 @@
   var PLATE_Y = 0, TARGET_TOP_Y = 0, VISIBLE_RISE = 0, PLAY_MARGIN = 0;
   var LAYER_H = 30;
  
-  var BASE_SPEED = 163;
+  var BASE_SPEED = 130;
   var SPEED_STEP = 4.2;
   var SPEED_MAX = 420;
   var GRAVITY = 900;
